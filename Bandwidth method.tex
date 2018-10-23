@@ -1,0 +1,87 @@
+\documentclass[UTF8,a4paper, 12pt]{ctexart}
+\usepackage[left=2.50cm, right=2.50cm, top=2.50cm, bottom=2.50cm]{geometry}
+\usepackage{xeCJK}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{color, soul}
+\usepackage{amsmath}
+\usepackage{enumitem}   
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\begin{document}
+
+\section {纯带宽模型最优化调度充分性证明}
+\subsection {Definitions}
+Considering the pure bandwith networking model G with a Injection Flow X(n-dimensional vector which indicate each message size,n is message number). So we have a Message finish time vector T which corresponding to the finish time of injection messages.we also define the maxT/minT represent the max/min finish time in T.
+\subsubsection {Proposition}
+For a pure bandwith networking model G and an injection Flow X and corresponding Message finish time vector T, If maxT = minT we have that for any integer s if $X_1 + X_2 + ... + X_s = X$ then $maxT \leq maxT_1 + maxT_2 + ... + maxT_s$ 
+\subsubsection { Prove}
+For any message which has positive size，there must be an full loaded link reside in its routing path.Because at message transporting link path must saturated .this mean that at least one of the link must be saturated.We call all these saturated links as Hot Spot links.  
+When message start transporting,the Hot Spots immediately appeared .Because the pure bandwith network has no latency.In our model, as long as the hot spot is not changed in some time period t,this quivalent to that the network  is stable and we can get the certain bandwith of each message during this time.  
+maxT = minT at here mean that all messages started at same time 0 and finished at the same time MaxT.So in the time period $(0,maxT)$,no message is finished.We can think network G in this period is stable ,because the network hot spots is not changed.This is not mean all messages have same size because there is the congestion in network.    
+When network is stable,each message  at least passing one hot spot link and and all the message finished at same time.we use S to represent all the hot spot links in the time period  $(0,maxT)$.for each link e in S,whole message size passing through e is definite.During time period$(0,maxT)$,as the hot spot links are all saturated link and each message passing through it ended at same time,hot spot links's work load is constant, and working time is maxT.
+Any other spliting of message may or may not staturate these links from beging to the end.these saturated links are  stable .they started working from time step 0,and working at full loaded state until time maxT,and all messages passing at least one of the hot spot link.   
+At now，given any spliting of msgs injection flow $X_1,X_2,,,X_s$ satisfy $X_1 + X_2 + ... + X_s = X$ . For any message i ,there is $X[i] = X_1[i] + X_2[i]+...+X_s[i]$.Suppose one of the hot spot link in X is l,the message set which passing through l is $M_{Xl}$,we have 
+
+\begin{equation}
+\begin{aligned}
+maxT & = max(T[M_{Xl}^1] , T[M_{Xl}^2] , ... , T[M_{Xl}^h]) \\
+&  = T[M_{Xl}^1] = T[M_{Xl}^2] = ... = T[M_{Xl}^h] \\
+ 	& =   \frac  {X[M_{Xl}^1] + X[M_{Xl}^2] + ... + X[M_{Xl}^h]}{B_{link}[l]}
+\end{aligned}
+\end{equation}
+ h is the size of $M_{Xl}$. on the other hand,the time to finish transporting injection flow $X_1,X_2,,,X_s$ is:
+\begin{equation}
+\begin{aligned}
+\sum_{j = 1}^{s} maxT_{X_j} &  = \sum_{j = 1}^{s}  \max _{t \in T} t = \sum_{j = 1}^{s} \max_{e \in AllLinks} H_s[e] \\
+& \geq  \sum_{j = 1}^{s} H_s[l] \geq \sum_{j = 1}^{s} W_s[l] \geq \sum_{j = 1}^{s} \sum_{m \in M_{X_jl}} \frac{X_j[m]}{B_{link}[l]} \\
+&  = \frac {X[M_{Xl}^1] + X[M_{Xl}^2] + ... + X[M_{Xl}^h]}{B_{link}[l]} =maxT 
+\end{aligned}
+\end{equation}   
+$H_s[e]$is the time the link e finished its last messasge transporting in injection flow $X_s$.$W_s$is the working time of link e in injection flow $X_s$.
+
+
+\begin{enumerate}[label=(\roman*)]
+	\item Message size must big enough,so the network latency can be ignored.
+	\item The network must have efficient end-to-end and flow control mechanism based on message and each message is equal weighted.
+	\item Link level flow control is considered infinitely fast  .
+\end{enumerate}
+
+
+\subsection{Algorithms}
+\subsubsection{Algorithm description}
+This algorithm  based on the infinitely fast link level flow control to deal with end to end flow control.So as the congestion happen the hotspot link must be located and we equally divide the remaining link bandwidth to these congested message.Once the bandwidth of message is determined,we will reduce the remaining bandwidth of all links which these message passing through.   
+\subsubsection{pseudocode} 
+
+
+
+
+\begin{algorithm}
+	\caption{My algorithm}\label{euclid}
+	 \hspace*{\algorithmicindent} \textbf{Input 111} \\
+	\hspace*{\algorithmicindent} \textbf{Output 222} 
+\begin{algorithmic}[1]
+	\State Initialize a population of particles with random values positions
+	and velocities from \textit{D} dimensions in the search space
+	\While{Termination condition not reached}
+	\For{Each particle $i$}
+	\State Adapt velocity of the particle using Equation \ref{eq:1}
+	\State Update the position of the particle using Equation \ref{eq:2}
+	\State Evaluate the fitness {$f(\overrightarrow{X}_i)$}
+	\If{$f(\overrightarrow{X}_i)<f(\overrightarrow{P}_i)$}
+	\State $\overrightarrow{P}_i \gets \overrightarrow{X}_i$
+	\EndIf
+	\If{$f(\overrightarrow{X}_i)<f(\overrightarrow{P}_g)$}
+	\State $\overrightarrow{P}_g \gets \overrightarrow{X}_i$
+	\EndIf
+	\EndFor
+	\EndWhile
+\end{algorithmic}
+\end{algorithm}
+\section{纯带宽网络拥塞控制模型描述}
+\subsection{Assumptions}
+
+
+
+\end{document}/
